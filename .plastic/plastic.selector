@@ -1,0 +1,4 @@
+repository "board & card project@tj_stardust_g@cloud.cn"
+  path "/"
+    smartbranch "/main/Oscar Local" 
+     
