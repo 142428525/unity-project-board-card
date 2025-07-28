@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -14,10 +15,11 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 
 	[Space()]
 	public Transform GRID;
+	public GameObject VCAM;
 	public Material GRID_LINES;
 	public Material GRID_HIGHLIGHT;
 
-	private readonly Vector3 DEFAULT_GRID_TRANSFORM_SCALE = new(0.5f, 0.5f, 0.0f);	// 魔法数字0.5f使它看起来大小合适
+	private readonly Vector3 DEFAULT_GRID_TRANSFORM_SCALE = new(0.5f, 0.5f, 0.0f);  // 魔法数字0.5f使它看起来大小合适
 	private const float DEFAULT_SCALE_FACTORS = 1.0f;
 
 	// Start is called before the first frame update
@@ -46,6 +48,8 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 	private void set_scale_factors(float f)
 	{
 		f = math.clamp(f, 0.2f, 1.0f);
+
+		VCAM.GetComponent<CinemachineVirtualCamera>().ForceCameraPosition(VCAM.transform.position * f / scale_factor, Quaternion.identity);
 
 		scale_factor = f;
 		GRID.localScale = f * DEFAULT_GRID_TRANSFORM_SCALE;
