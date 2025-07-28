@@ -10,8 +10,8 @@ namespace Chessboard
 		public Tilemap CHESSBOARD;
 		public Tilemap NON_COLLI_CHECKS;
 		public Tilemap COLLI_CHECKS;
-		public TileBase CHESSBOARD_TILE;	// for-test only
-		public TileBase CHECK_TILE;	// for-test only
+		public TileBase CHESSBOARD_TILE;    // for-test only
+		public TileBase CHECK_TILE; // for-test only
 
 		// Start is called before the first frame update
 		void Start()
@@ -42,7 +42,7 @@ namespace Chessboard
 
 		}
 
-		public Vector2Int ToBoardPos(Vector3 world_pos)
+		public Vector2Int CastToBoardPos(Vector3 world_pos)
 		{
 			return (Vector2Int)CHESSBOARD.WorldToCell(world_pos);
 		}
@@ -51,7 +51,7 @@ namespace Chessboard
 		{
 			var cell_pos = e.Value;
 			var is_emplacable = CHESSBOARD.HasTile((Vector3Int)cell_pos) && !COLLI_CHECKS.HasTile((Vector3Int)cell_pos);
-			
+
 			Debug.Log($"[boardsys] {is_emplacable}");
 
 			if (is_emplacable)

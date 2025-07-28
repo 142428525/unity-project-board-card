@@ -77,19 +77,6 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 		{
 			WhenCursorOnScreen?.Invoke(this, new CursorEventArgs(mouse.position.ReadValue()));
 		}
-
-		// for test only
-		// var mouse = Mouse.current;
-		// if (mouse.leftButton.wasPressedThisFrame)
-		// {
-		// 	var point = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
-		// 	var cell_pos = Chessboard.ChessboardManager.Instance.ToBoardPos(point);
-
-		// 	Debug.Log($"[inputsys] {point}, {cell_pos}");
-
-		// 	InvokeEmplace(this, cell_pos);   // ?
-		// }
-		//
 	}
 
 	void OnDestroy()
@@ -102,5 +89,8 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 		CursorEventArgs e = new(ctx.ReadValue<Vector2>());
 
 		Debug.Log($"{e.ScreenPos} -> {e.WorldPos}");
+
+		var cell_pos = Chessboard.ChessboardManager.Instance.CastToBoardPos(e.WorldPos);
+		InvokeEmplace(this, cell_pos);
 	}
 }
