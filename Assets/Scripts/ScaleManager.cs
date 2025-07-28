@@ -15,7 +15,7 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 
 	[Space()]
 	public Transform GRID;
-	public GameObject VCAM;
+	public CinemachineVirtualCamera VCAM;
 	public Material GRID_LINES;
 	public Material GRID_HIGHLIGHT;
 
@@ -49,7 +49,7 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 	{
 		f = math.clamp(f, 0.2f, 1.0f);
 
-		VCAM.GetComponent<CinemachineVirtualCamera>().ForceCameraPosition(VCAM.transform.position * f / scale_factor, Quaternion.identity);
+		VCAM.ForceCameraPosition(VCAM.transform.position * f / scale_factor, Quaternion.identity);
 
 		scale_factor = f;
 		GRID.localScale = f * DEFAULT_GRID_TRANSFORM_SCALE;

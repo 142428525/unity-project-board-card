@@ -2992,7 +2992,7 @@ MonoBehaviour:
   scale_factor: 1
   scroll_speed: 0.1
   GRID: {fileID: 652015665}
-  VCAM: {fileID: 620509425}
+  VCAM: {fileID: 620509426}
   GRID_LINES: {fileID: 2100000, guid: 28f923321be03144cac73505ade34a24, type: 2}
   GRID_HIGHLIGHT: {fileID: 2100000, guid: e8e854d25eceb1e429d79e1a46c65364, type: 2}
 --- !u!4 &1528551689

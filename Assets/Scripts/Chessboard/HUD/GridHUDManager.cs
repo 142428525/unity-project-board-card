@@ -92,9 +92,21 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 		return highlight_size;
 	}
 
+	[ContextMenu("Reset HUD Status")]
+	public void SetDefault()
+	{
+		VCAM.ForceCameraPosition(new Vector3(0, 0, -10), Quaternion.identity);
+		GRID_LINES.localPosition = Vector2.zero;
+		update_gird_lines_texture();
+	}
+
 	private void when_cursor_on_screen(object sender, InputManager.CursorEventArgs e)
 	{
-		Material m = highlight?.GetComponent<SpriteRenderer>().sharedMaterial;
+		Material m = null;
+		if (highlight != null)
+		{
+			m = highlight.GetComponent<SpriteRenderer>().sharedMaterial;
+		}
 
 		if (highlight != null)
 		{
@@ -123,7 +135,10 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 		}
 		else
 		{
-			highlight?.GetComponent<SpriteRenderer>().sharedMaterial.SetFloat("_Alpha", 0);
+			if (highlight != null)
+			{
+				highlight.GetComponent<SpriteRenderer>().sharedMaterial.SetFloat("_Alpha", 0);
+			}
 
 			Bounds screen_border = new();
 			screen_border.SetMinMax(Vector2.zero, 2 * screen_center);
@@ -132,16 +147,17 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 				Destroy(highlight);
 				highlight = null;
 			}
-			else
+			else if (highlight == null)
 			{
-				highlight ??= Instantiate(HIGHLIGHT_PREFAB, e.WorldPos, Quaternion.identity, GRID_HUD_ROOT);
+				highlight = Instantiate(HIGHLIGHT_PREFAB, e.WorldPos, Quaternion.identity, GRID_HUD_ROOT);
 			}
 		}
 
-		var cam_pos = VCAM.gameObject.transform.position;
+		var cam_pos = VCAM.transform.position;
 		GRID_LINES.localPosition = new(cam_pos.x, cam_pos.y);
 		update_gird_lines_texture();
 	}
+
 	private void update_bounds()
 	{
 		alpha_0.size = new Vector2(alpha_0_w * Screen.width, alpha_0_h * Screen.height);
@@ -150,7 +166,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 	private void update_gird_lines_texture()
 	{
-		var mgl = GRID_LINES.gameObject.GetComponent<SpriteRenderer>().sharedMaterial;
+		var mgl = GRID_LINES.GetComponent<SpriteRenderer>().sharedMaterial;
 		mgl.SetFloat("_DeltaX", 0.2f * GRID_LINES.position.x);
 		mgl.SetFloat("_DeltaY", 0.2f * GRID_LINES.position.y);
 		// 魔法数字0.2f为进制基数10（大小网格的比例）的0.5倍（Grid.transform的尺寸）的倒数，不会改变
