@@ -74,3 +74,6 @@ crashlytics-build.properties
 
 # other SCM
 .plastic/
+
+# code editor
+.vscode/
