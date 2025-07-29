@@ -45,9 +45,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
-    - _DeltaX: -0.26000002
-    - _DeltaY: 0.102
+    - _Alpha: 0
+    - _DeltaX: -1.4911306
+    - _DeltaY: -1.2724146
     - _EnableExternalAlpha: 0
     - _GraduationScale: 1
     - _Scale: 1

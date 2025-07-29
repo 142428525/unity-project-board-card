@@ -191,7 +191,7 @@ Transform:
   m_GameObject: {fileID: 191983806}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 110}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: Untagged
+  m_TagString: UICamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1008,7 +1008,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Button
+  m_text: Reset
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2299,6 +2299,7 @@ MonoBehaviour:
   GRID_HUD_ROOT: {fileID: 191983807}
   GRID_LINES: {fileID: 1320103517}
   HIGHLIGHT_PREFAB: {fileID: 7461688824494123937, guid: 5b590f979f615a64ea75a3b1b0152d9b, type: 3}
+  GRID_HIGHLIGHT: {fileID: 2100000, guid: e8e854d25eceb1e429d79e1a46c65364, type: 2}
   VCAM: {fileID: 620509426}
 --- !u!1 &1101844466
 GameObject:
@@ -2382,7 +2383,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1101844469}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1069471348}
+        m_TargetAssemblyTypeName: GridHUDManager, Assembly-CSharp
+        m_MethodName: SetDefault
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1528551688}
+        m_TargetAssemblyTypeName: ScaleManager, Assembly-CSharp
+        m_MethodName: SetDefault
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1101844469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2722,7 +2747,7 @@ GameObject:
   - component: {fileID: 1325703812}
   - component: {fileID: 1325703811}
   m_Layer: 0
-  m_Name: Main Camera (1)
+  m_Name: Board Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2744,7 +2769,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -2990,7 +3015,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale_factor: 1
-  scroll_speed: 0.1
+  scroll_speed: 0.10000000149011612
   GRID: {fileID: 652015665}
   VCAM: {fileID: 620509426}
   GRID_LINES: {fileID: 2100000, guid: 28f923321be03144cac73505ade34a24, type: 2}
@@ -3186,7 +3211,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.5
-  m_CameraDistance: 10
+  m_CameraDistance: 120
   m_DeadZoneWidth: 0.6
   m_DeadZoneHeight: 0.65
   m_DeadZoneDepth: 0

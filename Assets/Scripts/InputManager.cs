@@ -51,17 +51,22 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 	{
 		input_controls = new();
 
-		input_controls.Player.MouseConfirm.performed += when_mouse_confirm;
-		input_controls.Player.Cursor.performed += e => WhenCursorMove?.Invoke(this, new CursorEventArgs(e.ReadValue<Vector2>()));
-		input_controls.Player.Zoom.performed += e => WhenScroll?.Invoke(this, new InputEventArgs<float>(e.ReadValue<Vector2>().y));
+		input_controls.Player.MouseConfirm.performed += wait(when_mouse_confirm);
+		input_controls.Player.Cursor.performed += wait(e => WhenCursorMove?.Invoke(this, new CursorEventArgs(e.ReadValue<Vector2>())));
+		input_controls.Player.Zoom.performed += wait(e => WhenScroll?.Invoke(this, new InputEventArgs<float>(e.ReadValue<Vector2>().y)));
 
-		input_controls.Misc.Console.performed += e => OnConsoleOpen?.Invoke(this, EventArgs.Empty);
+		input_controls.Misc.Console.performed += wait(e => OnConsoleOpen?.Invoke(this, EventArgs.Empty));
+
+		Action<InputAction.CallbackContext> wait(Action<InputAction.CallbackContext> fn)
+		{
+			return Utils.Coroutines.WaitForFixedUpdate(this, fn);
+		}
 	}
 
 	// Start is called before the first frame update
 	void Start()
 	{
-		Assert.IsFalse(Mouse.current == null && Keyboard.current == null, "You must be using the Brain-Machine Interface. XD");
+		Assert.IsTrue(LowLevel.ExistMouse || LowLevel.ExistKeyboard, "You must be using the Brain-Machine Interface. XD");
 	}
 
 	// Update is called once per frame
@@ -72,10 +77,9 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 
 	void FixedUpdate()
 	{
-		var mouse = Mouse.current;
-		if (mouse != null)
+		if (LowLevel.ExistMouse)
 		{
-			WhenCursorOnScreen?.Invoke(this, new CursorEventArgs(mouse.position.ReadValue()));
+			WhenCursorOnScreen?.Invoke(this, new CursorEventArgs(LowLevel.ReadMousePosition()));
 		}
 	}
 
@@ -88,9 +92,9 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 	{
 		CursorEventArgs e = new(ctx.ReadValue<Vector2>());
 
-		Debug.Log($"{e.ScreenPos} -> {e.WorldPos}");
+		Debug.Log($"{e.ScreenPos} -> {e.WorldPosMain}");
 
-		var cell_pos = Chessboard.ChessboardManager.Instance.CastToBoardPos(e.WorldPos);
+		var cell_pos = Chessboard.ChessboardManager.Instance.CastToBoardPos(e.WorldPosMain);
 		InvokeEmplace(this, cell_pos);
 	}
 }

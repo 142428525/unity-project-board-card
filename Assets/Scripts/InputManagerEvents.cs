@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public partial class InputManager
@@ -20,19 +22,19 @@ public partial class InputManager
 	public class CursorEventArgs : EventArgs
 	{
 		public Vector2 ScreenPos { get; }
-		public Vector2 WorldPos { get; }
+		public Vector2 WorldPosMain { get; }
 
 		public CursorEventArgs(Vector2 raw)
 		{
 			ScreenPos = raw;
-			WorldPos = Camera.main.ScreenToWorldPoint(raw);
+			WorldPosMain = GetWorldPos(Utils.CameraView.Type.Board);
 		}
 
-		public bool isOnScreen()
+		public Vector2 GetWorldPos(Utils.CameraView.Type type) => Utils.CameraView.ScreenToWorldPos(type, ScreenPos);
+
+		public bool IsOnScreen()
 		{
-			Bounds screen_border = new();
-			screen_border.SetMinMax(Vector2.zero, new Vector2(Screen.width, Screen.height));
-			return screen_border.Contains(ScreenPos);
+			return 0 <= ScreenPos.x && ScreenPos.x <= Screen.width && 0 <= ScreenPos.y && ScreenPos.y <= Screen.height;
 		}
 	}
 
