@@ -12,7 +12,9 @@ using UnityEngine.InputSystem.LowLevel;
 [ExecuteInEditMode]
 public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 {
-	[Header("Debug Mutable"), SerializeField, Range(0.3f, 1.0f)]
+	[Header("Debug Mutable"), SerializeField, Range(0.5f, 1.0f)]
+	private double grid_lines_size = 0.9;
+	[SerializeField, Range(0.2f, 1.0f)]
 	private double highlight_size = 1.0;
 	[SerializeField]
 	private float alpha_0_w = 0.7f;
@@ -25,36 +27,28 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 	[Space()]
 	public Transform GRID_HUD_ROOT;
-	public Transform GRID_LINES;
+	public Transform GRID_LINES_TRANSFORM;
 	public GameObject HIGHLIGHT_PREFAB;
+	public Material GRID_LINES;
 	public Material GRID_HIGHLIGHT;
 	public CinemachineVirtualCamera VCAM;
 
-	private GameObject highlight = null;    // 没有考虑支持多光标的打算
+	private GameObject highlight = null; // 没有考虑支持多光标的打算
 	private GameObject fake_highlight = null;
-	private Vector2 screen_center = new(0.5f * Screen.width, 0.5f * Screen.height);
 	private Bounds alpha_0 = new();
 	private Bounds alpha_1 = new();
-
-	protected override void Awake()
-	{
-		update_bounds();
-	}
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		add_event_listener();
 
-		update_gird_lines_texture();
-
-#if UNITY_EDITOR
 		update_bounds();
-#endif
+		update_gird_lines();
 
 		void add_event_listener()
 		{
-			InputManager.WhenCursorOnScreen += when_cursor_on_screen;
+			//InputManager.WhenCursorOnScreen += when_cursor_on_screen;
 		}
 	}
 
@@ -63,13 +57,16 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 	{
 #if UNITY_EDITOR
 		update_bounds();
-		update_gird_lines_texture();
+		update_gird_lines();
 #endif
 	}
 
 	void FixedUpdate()
 	{
 		update_bounds();
+		update_gird_lines();
+
+		ForceRefresh(); // 不能再等待鼠标事件了！要对帧内回调顺序重拳出击！
 	}
 
 	void OnDrawGizmos()
@@ -96,32 +93,31 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 	[ContextMenu("Reset HUD Status")]
 	public void SetDefault()
 	{
+		grid_lines_size = 0.9;
 		VCAM.ForceCameraPosition(new Vector3(0, 0, -10), Quaternion.identity);
-		GRID_LINES.localPosition = Vector2.zero;
-		update_gird_lines_texture();
+		update_gird_lines();
 	}
 
 	public void ForceRefresh()
 	{
-		when_cursor_on_screen(this, new InputManager.CursorEventArgs(InputManager.LowLevel.ReadMousePosition()));
+		when_cursor_on_screen(null, new InputManager.CursorEventArgs(InputManager.LowLevel.ReadMousePosition()));
 	}
 
 	private void when_cursor_on_screen(object sender, InputManager.CursorEventArgs e)
 	{
 		if (highlight != null)
 		{
-			VCAM.Follow = fake_highlight.transform;
 			highlight.transform.localPosition = e.GetWorldPos(Utils.CameraView.Type.UI);
 			fake_highlight.transform.localPosition = e.WorldPosMain;
 
-			var delta_pos = highlight.transform.position + VCAM.transform.position;
-			GRID_HIGHLIGHT.SetFloat("_DeltaX", 0.2f * delta_pos.x);
-			GRID_HIGHLIGHT.SetFloat("_DeltaY", 0.2f * delta_pos.y);
-			// 魔法数字0.2f为进制基数10（大小网格的比例）的0.5倍（Grid.transform的尺寸）的倒数，不会改变
+			var delta_pos = highlight.transform.position + ((float)ScaleManager.Instance.ScaleFactor) * VCAM.transform.position;
+			GRID_HIGHLIGHT.SetFloat("_DeltaX", (float)(0.1 * delta_pos.x));
+			GRID_HIGHLIGHT.SetFloat("_DeltaY", (float)(0.1 * delta_pos.y));
+			// 魔法数字0.1为大小网格线嵌套比例的倒数
 		}
 
 		var point = e.ScreenPos;
-		if (alpha_0.Contains(point) /*|| alpha_1.Contains(point)*/)
+		if (alpha_0.Contains(point))
 		{
 			if (highlight == null)
 			{
@@ -156,32 +152,42 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 			}
 		}
 
-		update_gird_lines_texture();
+		update_gird_lines();
 
 		void reinstantiate()
 		{
 			highlight = Instantiate(HIGHLIGHT_PREFAB,
-								e.GetWorldPos(Utils.CameraView.Type.UI),
-								Quaternion.identity,
-								GRID_HUD_ROOT);
+				e.GetWorldPos(Utils.CameraView.Type.UI),
+				Quaternion.identity,
+				GRID_HUD_ROOT);
 
-			fake_highlight = new GameObject("FakeGridHighlight");
-			fake_highlight.transform.SetParent(GRID_HUD_ROOT);
+			var tmp = new GameObject("FakeGridHighlight");
+			tmp.transform.SetParent(GRID_HUD_ROOT);
+			tmp.transform.position = new(0, 0, GRID_HUD_ROOT.position.z);
+			fake_highlight = tmp;
+
+			VCAM.Follow = fake_highlight.transform;
 		}
 	}
 
 	private void update_bounds()
 	{
-		alpha_0.center = alpha_1.center = screen_center = new(0.5f * Screen.width, 0.5f * Screen.height); // NOTE: 暂时不写“屏幕尺寸变化”事件
+		alpha_0.center = alpha_1.center = new(0.5f * Screen.width, 0.5f * Screen.height); // NOTE: 暂时不写“屏幕尺寸变化”事件
 		alpha_0.size = new(alpha_0_w * Screen.width, alpha_0_h * Screen.height);
 		alpha_1.size = new(alpha_1_w * Screen.width, alpha_1_h * Screen.height);
 	}
 
-	private void update_gird_lines_texture()
+	private void update_gird_lines()
 	{
-		var mgl = GRID_LINES.GetComponent<SpriteRenderer>().sharedMaterial;
-		mgl.SetFloat("_DeltaX", 0.2f * VCAM.transform.position.x);
-		mgl.SetFloat("_DeltaY", 0.2f * VCAM.transform.position.y);
-		// 魔法数字0.2f为进制基数10（大小网格的比例）的0.5倍（Grid.transform的尺寸）的倒数，不会改变
+		GRID_LINES_TRANSFORM.localPosition = VCAM.transform.position;
+		GRID_LINES_TRANSFORM.localScale = new((float)(20 / ScaleManager.Instance.ScaleFactor), (float)(20 / ScaleManager.Instance.ScaleFactor));
+
+		GRID_LINES.SetFloat("_DeltaX", (float)(0.1 * ScaleManager.Instance.ScaleFactor * VCAM.transform.position.x));
+		GRID_LINES.SetFloat("_DeltaY", (float)(0.1 * ScaleManager.Instance.ScaleFactor * VCAM.transform.position.y));
+		// 魔法数字0.1为大小网格线嵌套比例的倒数
+
+		var inv = 1 / grid_lines_size;
+		GRID_LINES.SetTextureScale("_MaskTexture", new Vector2((float)inv, (float)inv));
+		GRID_LINES.SetTextureOffset("_MaskTexture", new Vector2((float)(0.5 * (1 - inv)), (float)(0.5 * (1 - inv))));
 	}
 }

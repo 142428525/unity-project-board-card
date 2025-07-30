@@ -277,7 +277,7 @@ public partial class @InputControls: IInputActionCollection2, IDisposable
                     ""id"": ""450ea325-897c-49f4-a79f-73b060e256b7"",
                     ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
