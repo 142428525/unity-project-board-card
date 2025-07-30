@@ -179,7 +179,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 	private void update_gird_lines()
 	{
-		GRID_LINES_TRANSFORM.localPosition = VCAM.transform.position;
+		GRID_LINES_TRANSFORM.localPosition = (Vector2)VCAM.transform.position;
 		GRID_LINES_TRANSFORM.localScale = new((float)(20 / ScaleManager.Instance.ScaleFactor), (float)(20 / ScaleManager.Instance.ScaleFactor));
 
 		GRID_LINES.SetFloat("_DeltaX", (float)(0.1 * ScaleManager.Instance.ScaleFactor * VCAM.transform.position.x));
