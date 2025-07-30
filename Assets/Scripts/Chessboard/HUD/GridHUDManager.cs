@@ -107,7 +107,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 	{
 		if (highlight != null)
 		{
-			highlight.transform.localPosition = e.GetWorldPos(Utils.CameraView.Type.UI);
+			highlight.transform.localPosition = (Vector3)e.GetWorldPos(Utils.CameraView.Type.UI) + new Vector3(0, 0, 100);
 			fake_highlight.transform.localPosition = e.WorldPosMain;
 
 			var delta_pos = highlight.transform.position + ((float)ScaleManager.Instance.ScaleFactor) * VCAM.transform.position;
@@ -157,7 +157,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 		void reinstantiate()
 		{
 			highlight = Instantiate(HIGHLIGHT_PREFAB,
-				e.GetWorldPos(Utils.CameraView.Type.UI),
+				(Vector3)e.GetWorldPos(Utils.CameraView.Type.UI) + new Vector3(0, 0, 100),
 				Quaternion.identity,
 				GRID_HUD_ROOT);
 
