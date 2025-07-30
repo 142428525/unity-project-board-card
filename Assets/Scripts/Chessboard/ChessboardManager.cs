@@ -10,7 +10,7 @@ namespace Chessboard
 		public Tilemap CHESSBOARD;
 		public Tilemap NON_COLLI_CHECKS;
 		public Tilemap COLLI_CHECKS;
-		public TileBase CHESSBOARD_TILE;    // for-test only
+		public TileBase CHESSBOARD_TILE; // for-test only
 		public TileBase CHECK_TILE; // for-test only
 
 		// Start is called before the first frame update
@@ -22,7 +22,7 @@ namespace Chessboard
 			NON_COLLI_CHECKS.ClearAllTiles();
 			COLLI_CHECKS.ClearAllTiles();
 
-			Debug.Log($"{CHESSBOARD.origin}, {CHESSBOARD.size}");   // here the 2 are (0, 0) and (0, 0)
+			Debug.Log($"{CHESSBOARD.origin}, {CHESSBOARD.size}"); // here the 2 are (0, 0) and (0, 0)
 
 			CHESSBOARD.size = new Vector3Int(18, 18);
 

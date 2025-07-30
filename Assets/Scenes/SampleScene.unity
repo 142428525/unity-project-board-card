@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c39c29f6ae74449828aa5221c9060b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tps: 50
 --- !u!4 &33482674
 Transform:
   m_ObjectHideFlags: 0
@@ -191,7 +192,7 @@ Transform:
   m_GameObject: {fileID: 191983806}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 110}
+  m_LocalPosition: {x: 0, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1278,7 +1279,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 738889571}
@@ -2291,14 +2292,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a5df8e27285144ab526cc9c4389b15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid_lines_size: 0.9
   highlight_size: 1
   alpha_0_w: 0.7
   alpha_0_h: 0.75
   alpha_1_w: 0.5
   alpha_1_h: 0.6
   GRID_HUD_ROOT: {fileID: 191983807}
-  GRID_LINES: {fileID: 1320103517}
+  GRID_LINES_TRANSFORM: {fileID: 1320103517}
   HIGHLIGHT_PREFAB: {fileID: 7461688824494123937, guid: 5b590f979f615a64ea75a3b1b0152d9b, type: 3}
+  GRID_LINES: {fileID: 2100000, guid: 28f923321be03144cac73505ade34a24, type: 2}
   GRID_HIGHLIGHT: {fileID: 2100000, guid: e8e854d25eceb1e429d79e1a46c65364, type: 2}
   VCAM: {fileID: 620509426}
 --- !u!1 &1101844466
@@ -2676,8 +2679,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 20, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 20, y: 20, z: 0}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 191983807}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2769,7 +2772,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -3015,7 +3018,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scale_factor: 1
-  scroll_speed: 0.10000000149011612
+  scroll_speed: 0.15000000596046448
   GRID: {fileID: 652015665}
   VCAM: {fileID: 620509426}
   GRID_LINES: {fileID: 2100000, guid: 28f923321be03144cac73505ade34a24, type: 2}

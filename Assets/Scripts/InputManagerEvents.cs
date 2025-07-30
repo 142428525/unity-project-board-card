@@ -38,10 +38,24 @@ public partial class InputManager
 		}
 	}
 
+	public class ScrollEventArgs : EventArgs
+	{
+		public float Value { get; }
+		public int Normalized { get; }
+		public bool IsUp { get; }
+
+		public ScrollEventArgs(float raw)
+		{
+			Value = raw;
+			IsUp = raw > 0;
+			Normalized = IsUp ? 1 : -1;
+		}
+	}
+
 	public static event EventHandler<InputEventArgs<Vector2Int>> OnEmplace;
 	public static event EventHandler<CursorEventArgs> WhenCursorMove;
 	public static event EventHandler<CursorEventArgs> WhenCursorOnScreen;
-	public static event EventHandler<InputEventArgs<float>> WhenScroll;
+	public static event EventHandler<ScrollEventArgs> WhenScroll;
 	public static event EventHandler OnConsoleOpen;
 
 	public static void InvokeEmplace(object sender, Vector2Int v) => OnEmplace?.Invoke(sender, new InputEventArgs<Vector2Int>(v));

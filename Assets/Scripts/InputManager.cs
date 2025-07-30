@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Assertions.Must;
@@ -53,7 +54,7 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 
 		input_controls.Player.MouseConfirm.performed += wait(when_mouse_confirm);
 		input_controls.Player.Cursor.performed += wait(e => WhenCursorMove?.Invoke(this, new CursorEventArgs(e.ReadValue<Vector2>())));
-		input_controls.Player.Zoom.performed += wait(e => WhenScroll?.Invoke(this, new InputEventArgs<float>(e.ReadValue<Vector2>().y)));
+		input_controls.Player.Zoom.performed += wait(when_scroll);
 
 		input_controls.Misc.Console.performed += wait(e => OnConsoleOpen?.Invoke(this, EventArgs.Empty));
 
@@ -96,5 +97,14 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 
 		var cell_pos = Chessboard.ChessboardManager.Instance.CastToBoardPos(e.WorldPosMain);
 		InvokeEmplace(this, cell_pos);
+	}
+
+	private void when_scroll(InputAction.CallbackContext ctx)
+	{
+		var v = ctx.ReadValue<Vector2>().y;
+		if (math.abs(v) > 1e-5)
+		{
+			WhenScroll?.Invoke(this, new ScrollEventArgs(v));
+		}
 	}
 }
