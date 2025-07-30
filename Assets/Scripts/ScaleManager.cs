@@ -30,6 +30,7 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 		set
 		{
 			var f = math.clamp(value, 0.1001, 1.0);
+			var inv_f = 1 / f;
 
 			GRID_LINES.SetFloat("_Scale", (float)f);
 			GRID_HIGHLIGHT.SetFloat("_Scale", (float)f);
@@ -39,7 +40,12 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 			GRID_HIGHLIGHT.SetTextureScale("_MaskTexture", new Vector2((float)inv_g, (float)inv_g));
 			GRID_HIGHLIGHT.SetTextureOffset("_MaskTexture", new Vector2((float)(0.5 * (1 - inv_g)), (float)(0.5 * (1 - inv_g))));
 
-			VCAM.m_Lens.OrthographicSize = (float)(5 / f);
+			var mouse_pos = Utils.CameraView.ScreenToWorldPos(Utils.CameraView.Type.Board, InputManager.LowLevel.ReadMousePosition());
+			var dv = (Vector2)VCAM.transform.position - mouse_pos;
+			Vector3 v = new((float)(mouse_pos.x + scale_factor * inv_f * dv.x), (float)(mouse_pos.y + scale_factor * inv_f * dv.y), -10);
+			VCAM.ForceCameraPosition(v, Quaternion.identity);
+
+			VCAM.m_Lens.OrthographicSize = (float)(5 * inv_f);
 
 			scale_factor = f;
 		}
