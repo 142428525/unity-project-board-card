@@ -63,24 +63,10 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 	void FixedUpdate()
 	{
-		//InputManager.WhenCursorOnScreen -= when_cursor_on_screen;
 		update_bounds();
 		update_gird_lines();
-		ForceRefresh();
-	}
 
-	void LateUpdate()
-	{
-#if !UNITY_EDITOR
-		//ForceRefresh();
-
-		// StartCoroutine(wait());
-		// IEnumerator wait()
-		// {
-		// 	yield return new WaitForEndOfFrame();
-		// 	ForceRefresh();
-		// }
-#endif
+		ForceRefresh(); // 不能再等待鼠标事件了！要对帧内回调顺序重拳出击！
 	}
 
 	void OnDrawGizmos()
@@ -166,7 +152,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 			}
 		}
 
-		update_gird_lines();Camera.main.GetComponent<CinemachineBrain>().ManualUpdate();
+		update_gird_lines();
 
 		void reinstantiate()
 		{
