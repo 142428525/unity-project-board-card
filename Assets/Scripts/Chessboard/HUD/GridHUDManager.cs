@@ -48,7 +48,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 		void add_event_listener()
 		{
-			//InputManager.WhenCursorOnScreen += when_cursor_on_screen;
+			InputManager.WhenCursorOnScreen += when_cursor_on_screen;
 		}
 	}
 
@@ -65,8 +65,6 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 	{
 		update_bounds();
 		update_gird_lines();
-
-		ForceRefresh(); // 不能再等待鼠标事件了！要对帧内回调顺序重拳出击！
 	}
 
 	void OnDrawGizmos()
@@ -105,17 +103,6 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 	private void when_cursor_on_screen(object sender, InputManager.CursorEventArgs e)
 	{
-		if (highlight != null)
-		{
-			highlight.transform.localPosition = (Vector3)e.GetWorldPos(Utils.CameraView.Type.UI) + new Vector3(0, 0, 100);
-			fake_highlight.transform.localPosition = e.WorldPosMain;
-
-			var delta_pos = highlight.transform.position + ((float)ScaleManager.Instance.ScaleFactor) * VCAM.transform.position;
-			GRID_HIGHLIGHT.SetFloat("_DeltaX", (float)(0.1 * delta_pos.x));
-			GRID_HIGHLIGHT.SetFloat("_DeltaY", (float)(0.1 * delta_pos.y));
-			// 魔法数字0.1为大小网格线嵌套比例的倒数
-		}
-
 		var point = e.ScreenPos;
 		if (alpha_0.Contains(point))
 		{
@@ -152,6 +139,17 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 			}
 		}
 
+		if (highlight != null)
+		{
+			highlight.transform.localPosition = (Vector3)e.GetWorldPos(Utils.CameraView.Type.UI) + new Vector3(0, 0, 100);
+			fake_highlight.transform.localPosition = e.WorldPosMain;
+
+			var delta_pos = highlight.transform.position + ((float)ScaleManager.Instance.ScaleFactor) * VCAM.transform.position;
+			GRID_HIGHLIGHT.SetFloat("_DeltaX", (float)(0.1 * delta_pos.x));
+			GRID_HIGHLIGHT.SetFloat("_DeltaY", (float)(0.1 * delta_pos.y));
+			// 魔法数字0.1为大小网格线嵌套比例的倒数
+		}
+
 		update_gird_lines();
 
 		void reinstantiate()
@@ -163,7 +161,7 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 
 			var tmp = new GameObject("FakeGridHighlight");
 			tmp.transform.SetParent(GRID_HUD_ROOT);
-			tmp.transform.position = new(0, 0, GRID_HUD_ROOT.position.z);
+			tmp.transform.position = (Vector3)e.GetWorldPos(Utils.CameraView.Type.UI) + new Vector3(0, 0, GRID_HUD_ROOT.position.z);
 			fake_highlight = tmp;
 
 			VCAM.Follow = fake_highlight.transform;
