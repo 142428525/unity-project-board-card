@@ -65,8 +65,6 @@ public class GridHUDManager : Utils.MonoSingleton<GridHUDManager>
 	{
 		update_bounds();
 		update_gird_lines();
-
-		//ForceRefresh(); // 不能再等待鼠标事件了！要对帧内回调顺序重拳出击！
 	}
 
 	void OnDrawGizmos()
