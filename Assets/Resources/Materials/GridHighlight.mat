@@ -46,8 +46,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _Alpha: 0
-    - _DeltaX: 0.32564268
-    - _DeltaY: -0.9032276
+    - _DeltaX: -0.12765698
+    - _DeltaY: -0.6007073
     - _EnableExternalAlpha: 0
     - _GraduationScale: 1
     - _Scale: 1

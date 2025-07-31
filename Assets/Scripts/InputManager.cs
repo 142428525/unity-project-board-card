@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Assertions.Must;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public partial class InputManager : Utils.MonoSingleton<InputManager>
@@ -94,6 +95,11 @@ public partial class InputManager : Utils.MonoSingleton<InputManager>
 		CursorEventArgs e = new(ctx.ReadValue<Vector2>());
 
 		Debug.Log($"{e.ScreenPos} -> {e.WorldPosMain}");
+
+		if (EventSystem.current.IsPointerOverGameObject() && !EventSystem.current.currentSelectedGameObject.CompareTag("UINonBlock"))
+		{
+			return; // UI拦截点击
+		}
 
 		var cell_pos = Chessboard.ChessboardManager.Instance.CastToBoardPos(e.WorldPosMain);
 		InvokeEmplace(this, cell_pos);
