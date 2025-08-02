@@ -41,6 +41,7 @@ public class ScaleManager : Utils.MonoSingleton<ScaleManager>
 			GRID_HIGHLIGHT.SetTextureOffset("_MaskTexture", new Vector2((float)(0.5 * (1 - inv_g)), (float)(0.5 * (1 - inv_g))));
 
 			var mouse_pos = Utils.CameraView.ScreenToWorldPos(Utils.CameraView.Type.Board, InputManager.LowLevel.ReadMousePosition());
+			mouse_pos = Utils.CameraView.IsPosOnScreen(mouse_pos) ? mouse_pos : Vector2.zero;
 			var dv = (Vector2)VCAM.transform.position - mouse_pos;
 			Vector3 v = new((float)(mouse_pos.x + scale_factor * inv_f * dv.x), (float)(mouse_pos.y + scale_factor * inv_f * dv.y), -10);
 			VCAM.ForceCameraPosition(v, Quaternion.identity);

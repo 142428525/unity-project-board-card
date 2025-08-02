@@ -27,5 +27,10 @@ namespace Utils
 				_ => throw new ArgumentOutOfRangeException(nameof(type), "Not a valid enum value.")
 			};
 		}
+
+		public static bool IsPosOnScreen(Vector2 screen_pos)
+		{
+			return 0 <= screen_pos.x && screen_pos.x <= Screen.width && 0 <= screen_pos.y && screen_pos.y <= Screen.height;
+		}
 	}
 }
